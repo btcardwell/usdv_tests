@@ -4,7 +4,7 @@ import ROOT
 
 # make dataframe from ntuple
 df = ROOT.RDataFrame("Events", "NanoAOD_1.root")
-#df = df.Range(10) # only look at first 10 events while testing
+df = df.Range(10) # only look at first 10 events while testing
 #print(df.Count().GetValue())
 
 # print columns that contain 'SV'
@@ -41,8 +41,20 @@ df = df.Filter("nSV > 0", ">= 1 SV")
 #df.Display("material_hist_bin").Print()
 
 # check how many events have >=1 SV
-df.Report().Print()
+#df.Report().Print()
 
 # now define the actual column we want (at least for the leading SV in events with >=1 SV)
 df = df.Define("material_flag", "material_hist->GetBinContent(material_hist->FindBin(SV_x[0], SV_y[0])) > 0.0")
-df.Display("material_flag").Print()
+#df.Display("material_flag").Print()
+
+# define new test column that uses a vector
+df = df.Define("rvec_example", "std::vector<float> {1.0, 2.0}")
+df.Display("rvec_example").Print()
+
+# define new test column that uses a python function
+# the below doesn't work because numba isn't installed
+#import numba
+#@ROOT.Numba.Declare(["float"], "bool")
+#def bigger_than_2(x):
+#    return x > 2
+
