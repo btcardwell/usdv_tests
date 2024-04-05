@@ -35,7 +35,7 @@ df = df.Define("material_hist_nEntries", "material_hist->GetEntries()")
 
 # define new test column that stores relevant bin number for leading SV
 # first filter out events with no SV
-df = df.Filter("nSV > 0", ">= 1 SV")
+#df = df.Filter("nSV > 0", ">= 1 SV")
 # then directly access leading SV x and y values; apparently double() isn't necessary
 #df = df.Define("material_hist_bin", "material_hist->FindBin(SV_x[0], SV_y[0])")
 #df.Display("material_hist_bin").Print()
@@ -44,12 +44,14 @@ df = df.Filter("nSV > 0", ">= 1 SV")
 #df.Report().Print()
 
 # now define the actual column we want (at least for the leading SV in events with >=1 SV)
-df = df.Define("material_flag", "material_hist->GetBinContent(material_hist->FindBin(SV_x[0], SV_y[0])) > 0.0")
+#df = df.Define("material_flag", "material_hist->GetBinContent(material_hist->FindBin(SV_x[0], SV_y[0])) > 0.0")
 #df.Display("material_flag").Print()
 
 # define new test column that uses a vector
-df = df.Define("rvec_example", "std::vector<float> {1.0, 2.0}")
-df.Display("rvec_example").Print()
+#df = df.Define("vec_test", "std::vector<float> {1.0, 2.0}")
+#df.Display("vec_test").Print()
+#df = df.Define("rvec_test", "ROOT::VecOps::RVec<float>({1.0, 2.0})")
+#df.Display("rvec_test").Print()
 
 # define new test column that uses a python function
 # the below doesn't work because numba isn't installed
@@ -58,3 +60,6 @@ df.Display("rvec_example").Print()
 #def bigger_than_2(x):
 #    return x > 2
 
+# define new test column using VecOps::Map
+df = df.Define("map_test", "return ROOT::VecOps::Map(SV_x, [](float f){return 2*f;})")
+df.Display("map_test").Print()
